@@ -18,6 +18,8 @@ bot.
 from telegram import Updater
 import logging
 import private_conf
+#from one_piece import subscribe_op
+
 
 # Enable logging
 logging.basicConfig(
@@ -56,6 +58,7 @@ def main():
 
     # on different commands - answer in Telegram
     dp.addTelegramCommandHandler("start", start)
+    #dp.addTelegramCommandHandler("subscribe_op", subscribe_op)
     dp.addTelegramCommandHandler("help", help)
 
     # on noncommand i.e message - echo the message on Telegram
