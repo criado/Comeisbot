@@ -5,8 +5,8 @@ import time
 
 def notifyOp(bot, text):
     '''
-    Recorre el archivo de chat_id suscritos y les notifica con el nuevo capítulo
-    de One Piece
+    It iterates over the subscribers file and send a notification message to
+    each chat
     '''
     f = open('private/subscribers', 'r')
     id = f.read()
@@ -18,12 +18,14 @@ def notifyOp(bot, text):
 
 def check_one_piece(bot):
     '''
-    En el archivo private/op_last_post está el id del último post procesado.
-    Se leen los 10 ultimos posts y se busca un nuevo capítulo de One Piece en
-    reddit o el ultimo post procesado. Si no encuentra ninguno de los dos,
-    repite la busqueda con el doble de posts y así sucesivamente.
-    Cuando encuentra alguna de las dos cosas actualiza el ultimo post procesado.
-    En el caso de encontrar nuevo capitulo notifica a todos los suscriptores
+    The last reddit id post the bot has processed is in the file
+    'private/op_last_post'. This method reads the last 10 posts and searches
+    for a new One Piece chapter or for the last post processed. If it doesn't
+    find any of those it repeats the search doubling the number of posts and so
+    on.
+    When it finds a new chapter or the last post processed it updates the file
+    with the last post processed. If it had found a new chapter, it notifies it
+    to all the subscriptors.
     '''
     f = open('private/op_last_post', 'r')
     last_post = f.read()
@@ -59,9 +61,9 @@ def check_one_piece(bot):
 
 def subscribe_op(bot, update):
     '''
-    Abre un archivo y después de comprobar que el chat no estaba suscrito
-    anteriormente (si lo estaba lo notifica y sale) lo suscribe añadiendo el
-    chat_id al archivo. También busca el último capítulo y lo manda al chat
+    It opens a file and after having checked that the chat wasn't subscribed
+    it subscribe the chat appending its id to the file. It also searches for the
+    last chapter and sends it to the chat
     '''
     f = open('private/subscribers', 'r+')
     id = update.message.chat_id
