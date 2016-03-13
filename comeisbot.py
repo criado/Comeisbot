@@ -17,7 +17,7 @@ bot.
 
 from telegram import Updater
 import logging
-import private_conf
+from private import private_conf
 
 # Enable logging
 logging.basicConfig(
