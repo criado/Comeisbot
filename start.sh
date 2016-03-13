@@ -1,2 +1,2 @@
 #!/bin/zsh
-setsid python comeisbot.py </dev/null >>comeislog  2>&1
+setsid python comeisbot.py </dev/null >>private/comeislog  2>&1
