@@ -57,6 +57,7 @@ def main():
     # on different commands - answer in Telegram
     dp.addTelegramCommandHandler("start", start)
     dp.addTelegramCommandHandler("help", help)
+    dp.addTelegramCommandHandler("leeop",leeop)
 
     # on noncommand i.e message - echo the message on Telegram
     dp.addTelegramMessageHandler(echo)
