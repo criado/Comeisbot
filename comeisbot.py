@@ -17,9 +17,8 @@ bot.
 
 from telegram import Updater
 import logging
-import private_conf
+from private import private_conf
 #from one_piece import subscribe_op
-
 
 # Enable logging
 logging.basicConfig(
@@ -60,6 +59,7 @@ def main():
     dp.addTelegramCommandHandler("start", start)
     #dp.addTelegramCommandHandler("subscribe_op", subscribe_op)
     dp.addTelegramCommandHandler("help", help)
+    dp.addTelegramCommandHandler("leeop",leeop)
 
     # on noncommand i.e message - echo the message on Telegram
     dp.addTelegramMessageHandler(echo)
