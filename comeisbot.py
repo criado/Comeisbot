@@ -20,6 +20,8 @@ import logging
 from private import private_conf
 from one_piece import subscribe_op
 from one_piece import run_op
+import threading
+
 # Enable logging
 logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -59,7 +61,9 @@ def main():
     dp.addTelegramCommandHandler("help", help)
     dp.addTelegramCommandHandler("leeop",leeop)
 
-    run_op(bot)
+    #run One Piece manga checker
+    run_op(updater.bot)
+
     # on noncommand i.e message - echo the message on Telegram
     dp.addTelegramMessageHandler(echo)
 

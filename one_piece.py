@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import praw
-import time
-import sched
 import threading
 
-#def notifyOp(text):
 def notifyOp(bot, text):
     '''
     It iterates over the subscribers file and send a notification message to
@@ -15,15 +12,11 @@ def notifyOp(bot, text):
     id = f.readline()
     #TODO mirar si hay que quitar el \n al string
     while id != '':
-        #print 'leed op'
-        #'''
         bot.sendMessage(id, text='¡Leed OP!'
                 ' ¡Ha salido un nuevo capítulo!')
         bot.sendMessage(id, text=text)
-        #'''
         id = f.read()
 
-#def check_one_piece():
 def check_one_piece(bot):
     '''
     The last reddit id post the bot has processed is in the file
@@ -42,7 +35,6 @@ def check_one_piece(bot):
     r = praw.Reddit(user_agent='comeis_op')
     subreddit = r.get_subreddit('OnePiece')
     new_last_post = subreddit.get_new(limit=1).next().id
-    #print 'new_last_post ', new_last_post
     if new_last_post == last_post:
         return
 
@@ -80,12 +72,10 @@ def subscribe_op(bot, update):
     last chapter and sends it to the chat
     '''
     f = open('private/subscribers', 'r+')
-   # id = 'asdf1234'
     id = update.message.chat_id
     line = f.readline()
     while line != '':
-        if line == id + '\n':
-            #print 'ya estabas suscrito'
+        if line == str(id) + '\n':
             bot.sendMessage(update.message.chat_id, text='Ya estabas suscrito!')
             f.close()
             return
@@ -96,27 +86,17 @@ def subscribe_op(bot, update):
 
     limit = 300
     while True:
-        asdf = False
         for submission in subreddit.get_new(limit=limit):
             op_text = submission.link_flair_text
             if op_text is None:
                 continue
             if 'Current Chapter' in op_text:
-                if asdf is False:
-                    asdf = True
-                    continue
-
-                '''
-                print 'te he suscrito'
-                print submission.selftext
-                #'''
-                bot.sendMessage(id, text='Ya estás suscrito a las notificaciones de'
+                bot.sendMessage(id, text='Acabas de suscribirte a las notificaciones de'
                        ' One Piece del Comeisbot. Usamos reddit para mandarte una'
                        ' notificación cuando sale el capítulo y con un enlace')
                 bot.sendMessage(id, text='El último capítulo es este:')
                 bot.sendMessage(id, text=submission.selftext)
-                #'''
-                f.write(id + '\n')
+                f.write(str(id) + '\n')
                 f.close()
                 return
         limit  *= 2
@@ -131,7 +111,7 @@ def unsubscribe_op(bot, update):
 
 def run_op(bot):
     check_one_piece(bot)
-    threading.Timer(360, run_op(bot)).start()
+    threading.Timer(120, run_op, [bot]).start()
 
 if __name__ == '__main__':
     run_op()
