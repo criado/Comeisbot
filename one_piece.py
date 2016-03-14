@@ -68,8 +68,8 @@ def check_one_piece(bot):
 def subscribe_op(bot, update):
     '''
     It opens a file and after having checked that the chat wasn't subscribed
-    it subscribe the chat appending its id to the file. It also searches for the
-    last chapter and sends it to the chat
+    it subscribes the chat appending its id to the file. It also searches for
+    the last chapter and sends it to the chat
     '''
     f = open('private/subscribers', 'r+')
     id = update.message.chat_id
