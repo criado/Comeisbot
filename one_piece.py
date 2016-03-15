@@ -18,8 +18,11 @@ def notifyOp(bot, text):
         bot.sendMessage(id, text=text)
         id = f.read()
 
+def extract_chapter(text):
+
+
 def parse_post(text):
-    urls =re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'+ 
+    urls =re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'+
             '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
             text)
     urls=[u for u in urls if u!="http://vizmanga.com/"]
@@ -66,14 +69,13 @@ def check_one_piece(bot):
             if op_text is None:
                 continue
             if 'Current Chapter' in op_text:
-                new_last_chapter = asdfasdfasdf
+                new_last_chapter = extract_chapter(submission.selftext)
                 if last_chapter == new_last_chapter:
                     break
                 f = open('private/OnePiece/op_last_post', 'w')
                 f.write(new_last_post)
                 f.close()
-                #notifyOp(submission.selftext)
-                notifyOp(bot, submission.selftext)
+                notifyOp(bot, parse_post(submission.selftext))
                 break
         else:
             limit *= 2
