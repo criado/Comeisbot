@@ -56,10 +56,10 @@ def check_one_piece(bot):
 
     r = praw.Reddit(user_agent='comeis_op')
     subreddit = r.get_subreddit('OnePiece')
-    try:
-        new_last_post = subreddit.get_new(limit=1).next().id
-    except:
-        return
+    #try:
+    new_last_post = subreddit.get_new(limit=1).next().id
+    #except:
+    #    return
 
     if new_last_post == last_post:
         return
@@ -67,7 +67,7 @@ def check_one_piece(bot):
     #TODO Comprobar si algo sale mal para que no se quede en este bucle infinito
     limit = 10
     while True:
-        try:
+       # try:
             for submission in subreddit.get_new(limit=limit):
                 if submission.id == last_post:
                     f = open('private/OnePiece/last_post', 'w')
@@ -80,6 +80,9 @@ def check_one_piece(bot):
                 if 'Current Chapter' in op_text:
                     new_last_chapter = extract_chapter(submission.selftext)
                     if last_chapter == new_last_chapter:
+                        f = open('private/OnePiece/last_post', 'w')
+                        f.write(new_last_post)
+                        f.close()
                         break
                     f = open('private/OnePiece/last_post', 'w')
                     f.write(new_last_post)
@@ -93,8 +96,8 @@ def check_one_piece(bot):
                 limit *= 2
                 continue
             break
-        except:
-            return
+        #except:
+        #    return
 
 #def subscribe_op():
 def subscribe_op(bot, update):
@@ -148,4 +151,4 @@ def unsubscribe_op(bot, update):
 
 def run_op(bot):
     check_one_piece(bot)
-    threading.Timer(600, run_op, [bot]).start()
+    threading.Timer(30, run_op, [bot]).start()
