@@ -115,19 +115,22 @@ def subscribe_op(bot, update):
 
     limit = 300
     while True:
-        for submission in subreddit.get_new(limit=limit):
-            op_text = submission.link_flair_text
-            if op_text is None:
-                continue
-            if 'Current Chapter' in op_text:
-                bot.sendMessage(id, text='Acabas de suscribirte a las notificaciones de'
-                       ' One Piece del Comeisbot. Usamos reddit para mandarte una'
-                       ' notificación cuando sale el capítulo y con un enlace')
-                bot.sendMessage(id, text='El último capítulo es este:')
-                bot.sendMessage(id, text=parse_post(submission.selftext))
-                f.write(str(id) + '\n')
-                f.close()
-                return
+        try:
+            for submission in subreddit.get_new(limit=limit):
+                op_text = submission.link_flair_text
+                if op_text is None:
+                    continue
+                if 'Current Chapter' in op_text:
+                    bot.sendMessage(id, text='Acabas de suscribirte a las notificaciones de'
+                           ' One Piece del Comeisbot. Usamos reddit para mandarte una'
+                           ' notificación cuando sale el capítulo y con un enlace')
+                    bot.sendMessage(id, text='El último capítulo es este:')
+                    bot.sendMessage(id, text=parse_post(submission.selftext))
+                    f.write(str(id) + '\n')
+                    f.close()
+                    return
+        except SSLError:
+            return
         limit  *= 2
 
 def unsubscribe_op(bot, update):
