@@ -22,9 +22,10 @@ def extract_chapter(text):
     re.findall(r'\d+', text)[0]
 
 def parse_post(text):
-    urls =re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'+
-            '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
-            text)
+    urls =re.findall(',(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|'+
+                     '[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\('+
+                     '[^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|['+
+                     '^\s`!()\[\]{};:\'".,<>?«»“”‘’]))', text);
     urls=[u for u in urls if u!="http://vizmanga.com/"]
 
     chapter=re.findall(r'\"(.+?)\"',text)
