@@ -36,7 +36,7 @@ def parse_post(text):
 def check_one_piece(bot):
     '''
     The last reddit id post the bot has processed is in the file
-    'private/OnePiece/op_last_post'. This method reads the last 10 posts and searches
+    'private/OnePiece/last_post'. This method reads the last 10 posts and searches
     for a new One Piece chapter or for the last post processed. If it doesn't
     find any of those it repeats the search doubling the number of posts and so
     on.
@@ -44,7 +44,7 @@ def check_one_piece(bot):
     with the last post processed. If it had found a new chapter, it notifies it
     to all the subscriptors.
     '''
-    f = open('private/OnePiece/op_last_post', 'r')
+    f = open('private/OnePiece/last_post', 'r')
     last_post = f.read()
     f.close()
     f = open('private/OnePiece/last_chapter', 'r')
@@ -62,7 +62,7 @@ def check_one_piece(bot):
     while True:
         for submission in subreddit.get_new(limit=limit):
             if submission.id == last_post:
-                f = open('private/OnePiece/op_last_post', 'w')
+                f = open('private/OnePiece/last_post', 'w')
                 f.write(new_last_post)
                 f.close()
                 break
@@ -73,8 +73,11 @@ def check_one_piece(bot):
                 new_last_chapter = extract_chapter(submission.selftext)
                 if last_chapter == new_last_chapter:
                     break
-                f = open('private/OnePiece/op_last_post', 'w')
+                f = open('private/OnePiece/last_post', 'w')
                 f.write(new_last_post)
+                f.close()
+                f = open('private/OnePiece/last_chapter', 'w')
+                f.write(new_last_chapter)
                 f.close()
                 notifyOp(bot, parse_post(submission.selftext))
                 break
