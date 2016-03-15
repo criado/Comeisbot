@@ -34,8 +34,6 @@ def parse_post(text):
 
     res=extract_chapter(text)+": "+chapter+":\n"
     for u in urls: res+=u+"\n"
-    print 'Voy a imprimir res en la siguente línea'
-    print res
     return res
 
 def check_one_piece(bot):

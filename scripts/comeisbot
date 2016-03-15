@@ -2,15 +2,15 @@
 # /etc/init.d/comeisbot
 
 #VAR
-COMEIS_PID=$(ps -eo pid,command | egrep 'python.*comeisbot'| grep -v egrep| cut -f2 -d ' ')
-COMEIS_PATH="/home/comeis/Comeisbot"
+COMEIS_PID=$(ps -eo pid,command | egrep 'python.*comeisbot'| grep -v egrep| cut -f1 -d ' ')
+cd /home/comeis/Comeisbot
 
 # Carry out specific functions when asked to by the system
 case "$1" in
 start)
 echo "Starting Comeisbot"
 if [ -z "$COMEIS_PID" ]; then
-nohup setsid python $COMEIS_PATH/comeisbot.py </dev/null >>$COMEIS_PATH/private/comeislog  2>&1 &
+nohup setsid python3 comeisbot.py </dev/null >>private/comeislog  2>&1 &
 echo "Comeisbot is now in the house"
 else
 echo "Comeisbot was already in the house"
@@ -19,7 +19,7 @@ fi
 stop)
 echo "Stopping Comeisbot"
 if [ ! -z "$COMEIS_PID" ]; then
-kill $COMEIS_PID
+kill -s SIGKILL $COMEIS_PID
 echo "Comeisbot is no longer in the house"
 else 
 echo "Comeisbot was not in the house"
