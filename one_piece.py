@@ -4,6 +4,8 @@ import praw
 import threading
 import re
 
+#TODO Capturar la excepción de error de SSL, en vez de hacer except:
+
 def notifyOp(bot, text):
     '''
     It iterates over the subscribers file and send a notification message to
@@ -27,10 +29,12 @@ def parse_post(text):
             text)
     urls=[u for u in urls if u!="http://vizmanga.com/"]
 
-    chapter=re.findall(r'\"(.+?)\"',text)
+    chapter=re.findall(r'\"(.+?)\"',text)[0]
 
     res=extract_chapter(text)+": "+chapter+":\n"
     for u in urls: res+=u+"\n"
+    print 'Voy a imprimir res en la siguente línea'
+    print res
     return res
 
 def check_one_piece(bot):
@@ -55,7 +59,7 @@ def check_one_piece(bot):
     subreddit = r.get_subreddit('OnePiece')
     try:
         new_last_post = subreddit.get_new(limit=1).next().id
-    except SSLError:
+    except:
         return
 
     if new_last_post == last_post:
@@ -90,7 +94,7 @@ def check_one_piece(bot):
                 limit *= 2
                 continue
             break
-        except SSLError:
+        except:
             return
 
 #def subscribe_op():
@@ -115,7 +119,7 @@ def subscribe_op(bot, update):
 
     limit = 300
     while True:
-        try:
+        #try:
             for submission in subreddit.get_new(limit=limit):
                 op_text = submission.link_flair_text
                 if op_text is None:
@@ -125,13 +129,15 @@ def subscribe_op(bot, update):
                            ' One Piece del Comeisbot. Usamos reddit para mandarte una'
                            ' notificación cuando sale el capítulo y con un enlace')
                     bot.sendMessage(id, text='El último capítulo es este:')
-                    bot.sendMessage(id, text=parse_post(submission.selftext))
+                    asdf = parse_post(submission.selftext)
+                    bot.sendMessage(id, text=asdf)
                     f.write(str(id) + '\n')
                     f.close()
                     return
-        except SSLError:
-            return
-        limit  *= 2
+     #   except:
+      #      print 'Excepcion de suscripcion'
+       #     return
+            limit  *= 2
 
 def unsubscribe_op(bot, update):
     '''
