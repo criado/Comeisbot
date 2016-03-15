@@ -18,6 +18,9 @@ def notifyOp(bot, text):
         bot.sendMessage(id, text=text)
         id = f.read()
 
+def get_chapter_number(text):
+    re.findall(r'\d+', text)[0]
+
 def parse_post(text):
     urls =re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'+ 
             '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
@@ -26,7 +29,7 @@ def parse_post(text):
 
     chapter=re.findall(r'\"(.+?)\"',text)
 
-    res=chapter+":\n"
+    res=get_chapter_number(text)+": "+chapter+":\n"
     for u in urls: res+=u+"\n"
 
 def check_one_piece(bot):
