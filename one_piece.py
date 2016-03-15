@@ -136,6 +136,3 @@ def unsubscribe_op(bot, update):
 def run_op(bot):
     check_one_piece(bot)
     threading.Timer(120, run_op, [bot]).start()
-
-if __name__ == '__main__':
-    run_op()
