@@ -151,4 +151,4 @@ def unsubscribe_op(bot, update):
 
 def run_op(bot):
     check_one_piece(bot)
-    threading.Timer(30, run_op, [bot]).start()
+    threading.Timer(600, run_op, [bot]).start()
