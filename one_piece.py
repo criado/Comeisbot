@@ -57,7 +57,7 @@ def check_one_piece(bot):
     r = praw.Reddit(user_agent='comeis_op')
     subreddit = r.get_subreddit('OnePiece')
     #try:
-    new_last_post = subreddit.get_new(limit=1).next().id
+    new_last_post = next(subreddit.get_new(limit=1)).id
     #except:
     #    return
 
