@@ -19,7 +19,7 @@ def notifyOp(bot, text):
         id = f.read()
 
 def extract_chapter(text):
-    re.findall(r'\d+', text)[0]
+    return re.findall(r'\d+', text)[0]
 
 def parse_post(text):
     urls =re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'+
