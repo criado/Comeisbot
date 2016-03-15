@@ -18,6 +18,17 @@ def notifyOp(bot, text):
         bot.sendMessage(id, text=text)
         id = f.read()
 
+def parse_post(text):
+    urls =re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'+ 
+            '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
+            text)
+    urls=[u for u in urls if u!="http://vizmanga.com/"]
+
+    chapter=re.findall(r'\"(.+?)\"',text)
+
+    res=chapter+":\n"
+    for u in urls: res+=u+"\n"
+
 def check_one_piece(bot):
     '''
     The last reddit id post the bot has processed is in the file
@@ -102,7 +113,7 @@ def subscribe_op(bot, update):
                        ' One Piece del Comeisbot. Usamos reddit para mandarte una'
                        ' notificación cuando sale el capítulo y con un enlace')
                 bot.sendMessage(id, text='El último capítulo es este:')
-                bot.sendMessage(id, text=submission.selftext)
+                bot.sendMessage(id, text=parse_post(submission.selftext))
                 f.write(str(id) + '\n')
                 f.close()
                 return
