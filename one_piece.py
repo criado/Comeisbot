@@ -9,7 +9,7 @@ def notifyOp(bot, text):
     It iterates over the subscribers file and send a notification message to
     each chat
     '''
-    f = open('private/subscribers', 'r')
+    f = open('private/OnePiece/subscribers', 'r')
     id = f.readline()
     #TODO mirar si hay que quitar el \n al string
     while id != '':
@@ -18,24 +18,25 @@ def notifyOp(bot, text):
         bot.sendMessage(id, text=text)
         id = f.read()
 
-def get_chapter_number(text):
+def extract_chapter(text):
     re.findall(r'\d+', text)[0]
 
 def parse_post(text):
-    urls =re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'+ 
+    urls =re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'+
             '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
             text)
     urls=[u for u in urls if u!="http://vizmanga.com/"]
 
     chapter=re.findall(r'\"(.+?)\"',text)
 
-    res=get_chapter_number(text)+": "+chapter+":\n"
+    res=extract_chapter(text)+": "+chapter+":\n"
     for u in urls: res+=u+"\n"
+    return res
 
 def check_one_piece(bot):
     '''
     The last reddit id post the bot has processed is in the file
-    'private/op_last_post'. This method reads the last 10 posts and searches
+    'private/OnePiece/op_last_post'. This method reads the last 10 posts and searches
     for a new One Piece chapter or for the last post processed. If it doesn't
     find any of those it repeats the search doubling the number of posts and so
     on.
@@ -43,8 +44,11 @@ def check_one_piece(bot):
     with the last post processed. If it had found a new chapter, it notifies it
     to all the subscriptors.
     '''
-    f = open('private/op_last_post', 'r')
+    f = open('private/OnePiece/op_last_post', 'r')
     last_post = f.read()
+    f.close()
+    f = open('private/OnePiece/last_chapter', 'r')
+    last_chapter = f.read()
     f.close()
 
     r = praw.Reddit(user_agent='comeis_op')
@@ -58,7 +62,7 @@ def check_one_piece(bot):
     while True:
         for submission in subreddit.get_new(limit=limit):
             if submission.id == last_post:
-                f = open('private/op_last_post', 'w')
+                f = open('private/OnePiece/op_last_post', 'w')
                 f.write(new_last_post)
                 f.close()
                 break
@@ -66,11 +70,13 @@ def check_one_piece(bot):
             if op_text is None:
                 continue
             if 'Current Chapter' in op_text:
-                f = open('private/op_last_post', 'w')
+                new_last_chapter = extract_chapter(submission.selftext)
+                if last_chapter == new_last_chapter:
+                    break
+                f = open('private/OnePiece/op_last_post', 'w')
                 f.write(new_last_post)
                 f.close()
-                #notifyOp(submission.selftext)
-                notifyOp(bot, submission.selftext)
+                notifyOp(bot, parse_post(submission.selftext))
                 break
         else:
             limit *= 2
@@ -86,7 +92,7 @@ def subscribe_op(bot, update):
     it subscribes the chat appending its id to the file. It also searches for
     the last chapter and sends it to the chat
     '''
-    f = open('private/subscribers', 'r+')
+    f = open('private/OnePiece/subscribers', 'r+')
     id = update.message.chat_id
     line = f.readline()
     while line != '':
