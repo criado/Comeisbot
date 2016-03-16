@@ -3,6 +3,7 @@
 import praw
 import threading
 import re
+import sys, traceback #Para el rollo de las excepciones
 
 #TODO Capturar la excepción de error de SSL, en vez de hacer except:
 
@@ -56,10 +57,11 @@ def check_one_piece(bot):
 
     r = praw.Reddit(user_agent='comeis_op')
     subreddit = r.get_subreddit('OnePiece')
-    #try:
-    new_last_post = next(subreddit.get_new(limit=1)).id
-    #except:
-    #    return
+    try:
+        new_last_post = next(subreddit.get_new(limit=1)).id
+    except:
+        traceback.print_exc(file=sys.stdout)
+        return
 
     if new_last_post == last_post:
         return
@@ -67,7 +69,7 @@ def check_one_piece(bot):
     #TODO Comprobar si algo sale mal para que no se quede en este bucle infinito
     limit = 10
     while True:
-       # try:
+        try:
             for submission in subreddit.get_new(limit=limit):
                 if submission.id == last_post:
                     f = open('private/OnePiece/last_post', 'w')
@@ -96,8 +98,9 @@ def check_one_piece(bot):
                 limit *= 2
                 continue
             break
-        #except:
-        #    return
+        except:
+            traceback.print_exc(file=sys.stdout)
+            return
 
 #def subscribe_op():
 def subscribe_op(bot, update):
@@ -121,7 +124,7 @@ def subscribe_op(bot, update):
 
     limit = 300
     while True:
-        #try:
+        try:
             for submission in subreddit.get_new(limit=limit):
                 op_text = submission.link_flair_text
                 if op_text is None:
@@ -136,10 +139,10 @@ def subscribe_op(bot, update):
                     f.write(str(id) + '\n')
                     f.close()
                     return
-     #   except:
-      #      print 'Excepcion de suscripcion'
-       #     return
-            limit  *= 2
+        except Exception as e:
+            traceback.print_exc(file=sys.stdout)
+            return
+        limit  *= 2
 
 def unsubscribe_op(bot, update):
     '''
