@@ -25,15 +25,21 @@ def extract_chapter(text):
     return re.findall(r'\d+', text)[0]
 
 def parse_post(text):
-    urls =re.findall(',(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|'+
-                     '[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\('+
-                     '[^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|['+
-                     '^\s`!()\[\]{};:\'".,<>?«»“”‘’]))', text);
+    print(text)
+    #urls =re.findall(',(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|'+
+    #                 '[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\('+
+    #                 '[^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|['+
+    #                 '^\s`!()\[\]{};:\'".,<>?«»“”‘’]))', text);
+    #urls =re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!\,]|(?:%[0-9a-'+
+    #                 'fA-F][0-9a-fA-F]))+', text)
+    urls= re.findall(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$~_?\+-=\\\.&]*)",text);
+    urls=[u[0] for u in urls]
     urls=[u for u in urls if u!="http://vizmanga.com/"]
 
     chapter=re.findall(r'\"(.+?)\"',text)[0]
 
-    res=extract_chapter(text)+": "+chapter+":\n"
+    res=extract_chapter(text)+": "+chapter+"\n"
+    print(urls)
     for u in urls: res+=u+"\n"
     return res
 
@@ -132,10 +138,9 @@ def subscribe_op(bot, update):
                 if 'Current Chapter' in op_text:
                     bot.sendMessage(id, text='Acabas de suscribirte a las notificaciones de'
                            ' One Piece del Comeisbot. Usamos reddit para mandarte una'
-                           ' notificación cuando sale el capítulo y con un enlace')
-                    bot.sendMessage(id, text='El último capítulo es este:')
+                           ' notificación cuando sale el capítulo y con un enlace.')
                     asdf = parse_post(submission.selftext)
-                    bot.sendMessage(id, text=asdf)
+                    bot.sendMessage(id, text='El último capítulo es:\n'+asdf)
                     f.write(str(id) + '\n')
                     f.close()
                     return
