@@ -20,6 +20,7 @@ def notifyOp(bot, text):
                 ' ¡Ha salido un nuevo capítulo!')
         bot.sendMessage(id, text=text)
         id = f.read()
+    f.close()
 
 def extract_chapter(text):
     return re.findall(r'\d+', text)[0]
